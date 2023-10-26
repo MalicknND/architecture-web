@@ -1,15 +1,18 @@
-const mysql = require("mysql");
+const { Sequelize, DataTypes } = require("sequelize");
+// Créez une instance Sequelize et configurez-la pour se connecter à votre base de données
+const sequelize = new Sequelize("architecture_web", "root", "", {
+  host: "localhost",
+  dialect: "mysql", // Remplacez par le dialecte de votre base de données (mysql, postgres, sqlite, etc.)
+});
 
-// Configuration de la connexion à la base de données
-const dbConfig = {
-  host: "localhost", // Remplacez par le nom de votre serveur de base de données
-  user: "votre_nom_utilisateur",
-  password: "votre_mot_de_passe",
-  database: "votre_base_de_donnees",
-};
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Connection has been established successfully.");
+  })
+  .catch((error) => {
+    console.error("Unable to connect to the database: ", error);
+  });
 
-// Création du pool de connexion
-const pool = mysql.createPool(dbConfig);
-
-// Exportez le pool de connexion pour l'utiliser dans d'autres parties de votre application
-module.exports = pool;
+//exporter la connexion
+module.exports = sequelize;

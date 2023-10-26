@@ -9,21 +9,19 @@ const cors = require("cors");
 const articleRouter = require("./routes/article.route");
 const bodyParser = require("body-parser");
 const apiRouter = require("./routes");
+const Sequelize = require("sequelize");
 
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PWD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
+const sequelize = new Sequelize("architecture_web", "root", "", {
+  host: "localhost",
+  dialect: "mysql", // Remplacez par le dialecte de votre base de données (mysql, postgres, sqlite, etc.)
 });
 
-connection.connect((err) => {
-  if (err) {
-    console.error("error connecting db :", err);
-    return;
-  }
-});
+try {
+  sequelize.authenticate();
+  console.log("Connection has been established successfully.");
+} catch (error) {
+  console.error("Unable to connect to the database:", error);
+}
 
 app.use(cors({ origin: "http://localhost:3000" }));
 app.use(bodyParser.json());

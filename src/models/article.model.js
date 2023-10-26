@@ -6,6 +6,15 @@ const sequelize = new Sequelize("architecture_web", "root", "", {
   dialect: "mysql", // Remplacez par le dialecte de votre base de données (mysql, postgres, sqlite, etc.)
 });
 
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Connection has been established successfully.");
+  })
+  .catch((error) => {
+    console.error("Unable to connect to the database: ", error);
+  });
+
 // Définissez le modèle de l'article
 const Article = sequelize.define("Article", {
   titre: {
@@ -21,5 +30,14 @@ const Article = sequelize.define("Article", {
     allowNull: false, // La date ne peut pas être vide
   },
 });
+
+sequelize
+  .sync()
+  .then(() => {
+    console.log("Article created successfully!");
+  })
+  .catch((error) => {
+    console.error("Unable to create table : ", error);
+  });
 
 module.exports = Article;
