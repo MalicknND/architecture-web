@@ -1,27 +1,20 @@
 const express = require("express");
 require("dotenv").config();
-const { engine } = require("express-handlebars");
 const app = express();
-const path = require("path");
-const mysql = require("mysql2");
-var helpers = require("handlebars-helpers")();
 const cors = require("cors");
-const articleRouter = require("./routes/article.route");
 const bodyParser = require("body-parser");
 const apiRouter = require("./routes");
 const Sequelize = require("sequelize");
+const db = require("./models");
 
-const sequelize = new Sequelize("architecture_web", "root", "", {
-  host: "localhost",
-  dialect: "mysql", // Remplacez par le dialecte de votre base de données (mysql, postgres, sqlite, etc.)
-});
-
-try {
-  sequelize.authenticate();
-  console.log("Connection has been established successfully.");
-} catch (error) {
-  console.error("Unable to connect to the database:", error);
-}
+db.sequelize
+  .sync()
+  .then(() => {
+    console.log("Synchroniser la base");
+  })
+  .catch((err) => {
+    console.log("Erreur de synchronisation: " + err.message);
+  });
 
 app.use(cors({ origin: "http://localhost:3000" }));
 app.use(bodyParser.json());
